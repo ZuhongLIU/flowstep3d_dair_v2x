@@ -9,6 +9,7 @@ model_params:
   k_decay_fact: 1.0
 
 exp_params:
+  pre_trained_weights_checkpoint: /GPFS/rhome/zuhongliu/SSL_OCC/SSL_Flow/flowstep3d/checkpoints/flowstep3d_self/2022-12-17_05-59/last.ckpt
   disable_plots: True
   batch_size: 2
   num_workers: 32
@@ -18,12 +19,13 @@ exp_params:
   
   data:
     overfit_samples: null
-    train_dataset: flyingthings3d
-    train_data_root: data/datasets
+    train_dataset: dair_v2x
+    train_data_root: /GPFS/data/zuhongliu/dair_v2x_preprocess/
     test_dataset: null
     test_data_root: null
     num_points: 8192
     full: False
+    scene: all
     allow_less_points: False
 
     data_process:
@@ -76,7 +78,7 @@ trainer_params:
   deterministic: False # slower. reproduce.
   distributed_backend: 'ddp'
   num_nodes: 1
-  gpus: 8
+  gpus: 3
   max_epochs: 80
   num_sanity_val_steps: 3
   check_val_every_n_epoch: 1

@@ -9,17 +9,18 @@ model_params:
 
 exp_params:
   disable_plots: True
-  batch_size: 8
+  batch_size: 1
   num_workers: 32
   test_iters: 5
   data:
     overfit_samples: null
     train_dataset: null
     train_data_root: null
-    test_dataset: kitti
-    test_data_root: data/datasets
+    test_dataset: dair_v2x
+    test_data_root: /GPFS/data/zuhongliu/dair_v2x_preprocess/
     num_points: 8192
     full: False
+    scene: yizhuang06
     allow_less_points: False
 
     data_process:
@@ -72,13 +73,13 @@ exp_params:
 trainer_params:
   distributed_backend: 'ddp'
   num_nodes: 1
-  gpus: 2
+  gpus: 1
   max_epochs: 80
   num_sanity_val_steps: 3
   check_val_every_n_epoch: 1
-  # resume_from_checkpoint: 'checkpoints/flowstep3d_self/2021-03-23_00-47/epoch=76.ckpt' # unsup (baseline)
-  resume_from_checkpoint: 'checkpoints/flowstep3d_self/2021-03-24_01-03/epoch=23.ckpt' # unsup (ft)  *** BEST 0.1021 KITTI ***
-
+  #resume_from_checkpoint: 'pretrained_model/flowstep3d_self/2021-03-23_00-47/epoch=76.ckpt' # unsup (baseline)
+  resume_from_checkpoint: /GPFS/rhome/zuhongliu/SSL_OCC/SSL_Flow/flowstep3d/checkpoints/flowstep3d_self/2022-12-17_05-59/epoch=0.ckpt # unsup (ft)  *** BEST 0.1021 KITTI ***
+ 
 logging_params:
   offline_mode: True
   api_key: None  # keep None if NEPTUNE_API_TOKEN environment variable is set

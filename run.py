@@ -12,8 +12,10 @@ from pytorch_lightning.loggers import NeptuneLogger
 from pytorch_lightning.callbacks import ModelCheckpoint
 import pytorch_lightning as pl
 
+os.environ['CUDA_VISIBLE_DEVICES'] = '0,1,2'
 
 def main(config):
+    print(config)
 
     # Create Neptune Logger
     neptune_logger = NeptuneLogger(
@@ -25,6 +27,7 @@ def main(config):
                                    tags=config['logging_params']['tags'])
 
     # Create model and experiment instance
+    
     model = models_dict[config['model_params']['model_name']](**config['model_params'])
     experiment = SceneFlowExp(model, config['exp_params'])
 

@@ -1,5 +1,6 @@
 from data.loaders.kitti import KITTI
 from data.loaders.flyingthings3d_subset import FlyingThings3DSubset
+from data.loaders.dair_v2x import Dair_v2x
 from data.transforms import transforms
 
 
@@ -35,6 +36,19 @@ def get_datasets(data_params):
                                                num_points=data_params['num_points'],
                                                data_root=data_params['train_data_root'],
                                                overfit_samples=data_params['overfit_samples'])
+        elif data_params['train_dataset'] == 'dair_v2x':
+            train_dataset=Dair_v2x(train=True,
+                                    transform=train_transform,
+                                    num_points=data_params['num_points'],
+                                    data_root=data_params['train_data_root'],
+                                    scene=data_params['scene'])
+            
+            val_dataset=Dair_v2x(train=False,
+                                    transform=train_transform,
+                                    num_points=data_params['num_points'],
+                                    data_root=data_params['train_data_root'],
+                                    scene=data_params['scene'])
+
         else:
             raise ValueError('Undefined dataset')
     else:
@@ -52,6 +66,12 @@ def get_datasets(data_params):
                                                 transform=test_transform,
                                                 num_points=data_params['num_points'],
                                                 data_root=data_params['test_data_root'])
+        elif data_params['test_dataset'] == 'dair_v2x':
+            test_dataset=Dair_v2x(train=False,
+                                    transform=train_transform,
+                                    num_points=data_params['num_points'],
+                                    data_root=data_params['test_data_root'],
+                                    scene=data_params['scene'])
         else:
             raise ValueError('Undefined test dataset')
     else:

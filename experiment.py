@@ -7,6 +7,7 @@ import pytorch_lightning as pl
 from utils.metrics import SceneFlowMetrics
 from utils.utils import get_num_workers
 from utils.exp_utils import get_datasets
+from utils.utils import visualize
 from losses import *
 
 
@@ -64,8 +65,19 @@ class SceneFlowExp(pl.LightningModule):
         return train_results
 
     def _test_val_step(self, batch, batch_idx, split):
+        #print("11111111111111111111111")
         pos1, pos2, feat1, feat2, flow_gt, fnames = batch
+        #print(pos1.shape)
+        #print(pos2.shape)
+        
         flows_pred = self(pos1, pos2, feat1, feat2, self.hparams[f'{split}_iters'])
+        #print(flows_pred[-1].shape)
+        
+        #if fnames[0]=='yizhuang06/val/005929_005930.npy':
+            
+        #    visualize(pos1,pos2,flows_pred[-1])
+        #print(fnames)
+        #return
         loss = self.sequence_loss(pos1, pos2, flows_pred, flow_gt)
         metrics = self.val_metrics(pos1, pos2, flows_pred, flow_gt)
         
@@ -73,6 +85,7 @@ class SceneFlowExp(pl.LightningModule):
         val_results = pl.EvalResult(checkpoint_on=metrics[f'val_epe3d_i#{i_last}'])
         val_results.log('val_loss', loss, sync_dist=True, on_step=False, on_epoch=True, logger=True, prog_bar=False, reduce_fx=torch.mean)
         val_results.log_dict(metrics, on_step=False, on_epoch=True, logger=True, prog_bar=False, reduce_fx=torch.mean)  # No need to sync_dist since metrics are already synced
+        #print(metrics)
 
         return val_results
 
@@ -86,6 +99,7 @@ class SceneFlowExp(pl.LightningModule):
         """
         Executes a single test step.
         """
+        #print("batch:",batch_idx)
         return self._test_val_step(batch, batch_idx, 'test')
 
     def configure_optimizers(self):
